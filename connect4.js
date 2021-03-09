@@ -5,11 +5,11 @@
  * board fills (tie)
  */
 
-var WIDTH = 7;
-var HEIGHT = 6;
+const WIDTH = 7;
+const HEIGHT = 6;
 
-var currPlayer = 1; // active player: 1 or 2
-var board = []; // array of rows, each row is array of cells  (board[y][x])
+let currPlayer = 1; // active player: 1 or 2
+const board = []; // array of rows, each row is array of cells  (board[y][x])
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -17,20 +17,21 @@ var board = []; // array of rows, each row is array of cells  (board[y][x])
 
 function makeBoard() {
   // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-     for(let y = 0;y<=HEIGHT;y++){
-        board.push(Array.from({length:WIDTH}));
-     }
+  for (let y = 0; y <= HEIGHT; y++) {
+    board.push(Array.from({ length: WIDTH }));
+  }
 }
+
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
   // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
 
-   const htmlBoard = document.getElementById('board');
+  const htmlBoard = document.getElementById('board');
   // TODO: add comment for this code
   //created top row of the table
-  var top = document.createElement("tr");
+  const top = document.createElement("tr");
   top.setAttribute("id", "column-top");
   top.addEventListener("click", handleClick);
 
@@ -43,7 +44,7 @@ function makeHtmlBoard() {
 
   // TODO: add comment for this code
   //create row and column and append to the board
-  for (var y = 0; y < HEIGHT; y++) {
+  for (let y = 0; y < HEIGHT; y++) {
     const row = document.createElement("tr");
     for (var x = 0; x < WIDTH; x++) {
       const cell = document.createElement("td");
@@ -58,10 +59,10 @@ function makeHtmlBoard() {
 
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
-  for(let y = HEIGHT-1 ; y >=0 ;y--){
-     if(!board[y][x]){
-        return y;
-     }
+  for (let y = HEIGHT - 1; y >= 0; y--) {
+    if (!board[y][x]) {
+      return y;
+    }
   }
   return null;
 }
@@ -70,41 +71,41 @@ function findSpotForCol(x) {
 
 function placeInTable(y, x) {
 
-  console.log(`Value of y ${y} and x ${x} inside placeInTable`);
+  //console.log(`Value of y ${y} and x ${x} inside placeInTable`);
   // TODO: make a div and insert into correct table cell
-   const pieceDiv = document.createElement('div');
-   pieceDiv.classList.add('piece');
-   pieceDiv.classList.add(`p${currPlayer}`);
-  
-   const findSpot = document.getElementById(`${y}-${x}`);
-   findSpot.append(pieceDiv);
-   
+  const pieceDiv = document.createElement('div');
+  pieceDiv.classList.add('piece');
+  pieceDiv.classList.add(`p${currPlayer}`);
+
+  const findSpot = document.getElementById(`${y}-${x}`);
+  findSpot.append(pieceDiv);
+
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
   // TODO: pop up alert message
-       alert(msg);
+  setInterval(() => alert(msg), 100)
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
   // get x from ID of clicked cell
-  
+
   var x = +evt.target.id;
-  console.log('x ' + x);
+  //console.log('x ' + x);
   // get next spot in column (if none, ignore click)
   var y = findSpotForCol(x);
-  console.log('y ' + y);
+  //console.log('y ' + y);
   if (y === null) {
     return;
   }
 
   // place piece in board and add to HTML table
   board[y][x] = currPlayer;
- 
+
   // TODO: add line to update in-memory board
   placeInTable(y, x);
 
@@ -116,23 +117,19 @@ function handleClick(evt) {
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
 
-  if(board.every((row)=>
-      row.every((cell)=> cell)))
-     return endGame(`Game Tie`);
+  if (board.every((row) =>
+    row.every((cell) => cell)))
+    return endGame(`Game Tie`);
+
   // switch players
   // TODO: switch currPlayer 1 <-> 2
-  // console.log('CurrentPlayer '+ currPlayer);
-  // if(currPlayer === 1){
-  //    currPlayer = 2;
-  //    console.log('Current Player Switch to 2');
-  // }
-  // else{
-  //   currPlayer = 1;
-  //   console.log('Current Player Switch to 1');
-  // }
-  currPlayer = currPlayer === 1? 2 : 1;
+  //console.log('CurrentPlayer '+ currPlayer);
+  switchPlayer()
+}
 
-} 
+function switchPlayer() {
+  currPlayer = currPlayer === 1 ? 2 : 1;
+}
 
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -154,7 +151,7 @@ function checkForWin() {
   }
 
   // TODO: read and understand this code. Add comments to help you.
-
+  //get list of the cell for checking the different ways to win
   for (var y = 0; y < HEIGHT; y++) {
     for (var x = 0; x < WIDTH; x++) {
       var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
